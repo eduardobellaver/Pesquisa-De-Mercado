@@ -1,0 +1,17 @@
+{
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+```
+
+### 2. Estrutura final dos arquivos
+
+Você deve ter esses 2 arquivos na mesma pasta:
+```
+📁 seu-projeto/
+  📄 index.html
+  📄 vercel.json  ← novo arquivo
