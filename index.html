@@ -6,15 +6,16 @@
     <title>Pesquisa de Mercado - Segmento de Software</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.5.0/Recharts.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.10.3/dist/Recharts.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <div id="root"></div>
     
     <script type="text/babel">
-        const { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
+        const { useState, useEffect } = React;
+        const { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = window.Recharts;
 
         function MarketResearchDashboard() {
           const timelineData = [
@@ -47,26 +48,26 @@
 
           const companyData = [
             { name: 'CENTRO DE...', value: 12831331029.21, fullName: 'CENTRO DE INFORMATICA E AUTOMACAO DO ESTADO DE SC S/A' },
-            { name: 'EMPRESA DE...', value: 2700000000, fullName: 'EMPRESA DE TECNOLOGIA E INFORMAÇÕES DA PREVIDENCIA' },
+            { name: 'EMPRESA DE...', value: 2700000000, fullName: 'EMPRESA DE TECNOLOGIA E INFORMACOES DA PREVIDENCIA' },
             { name: 'SMART CITI...', value: 2000000000, fullName: 'SMART CITIZEN DESENVOLVIMENTO E LICENCIAMENTO DE SOFTWARE LTDA' },
             { name: 'BRASOFTWAR...', value: 1700000000, fullName: 'BRASOFTWARE INFORMATICA LTDA' },
             { name: 'ATECH - NE...', value: 500000000, fullName: 'ATECH - NEGOCIOS EM TECNOLOGIAS S.A.' },
             { name: 'EXTREME DI...', value: 400000000, fullName: 'EXTREME DIGITAL EXPERIENCE LTDA' },
             { name: 'TECHBIZ FO...', value: 350000000, fullName: 'TECHBIZ FORENSE DIGITAL LTDA' },
-            { name: 'COMPANHIA...', value: 300000000, fullName: 'COMPANHIA DE PROCESSAMENTO DE DADOS DO ESTADO DE SÃO PAULO - PRODESP' },
+            { name: 'COMPANHIA...', value: 300000000, fullName: 'COMPANHIA DE PROCESSAMENTO DE DADOS DO ESTADO DE SAO PAULO - PRODESP' },
             { name: 'SERVICO FE...', value: 280000000, fullName: 'SERVICO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)' },
             { name: 'RESOURCE T...', value: 250000000, fullName: 'RESOURCE TECNOLOGIA E INFORMATICA LTDA' }
           ];
 
           const pieData = [
             { name: 'CENTRO DE INFORMATICA E AUTOMACAO DO ESTADO DE SC S/A', value: 43.8, color: '#FFC0CB' },
-            { name: 'EMPRESA DE TECNOLOGIA E INFORMAÇÕES DA PREVIDENCIA', value: 13.5, color: '#1E40AF' },
+            { name: 'EMPRESA DE TECNOLOGIA E INFORMACOES DA PREVIDENCIA', value: 13.5, color: '#1E40AF' },
             { name: 'SMART CITIZEN DESENVOLVIMENTO E LICENCIAMENTO DE SOFTWARE LTDA', value: 10.2, color: '#22C55E' },
             { name: 'BRASOFTWARE INFORMATICA LTDA', value: 8.5, color: '#7C9CB5' },
             { name: 'ATECH - NEGOCIOS EM TECNOLOGIAS S.A.', value: 6.8, color: '#DC2626' },
             { name: 'EXTREME DIGITAL EXPERIENCE LTDA', value: 5.2, color: '#EAB308' },
             { name: 'TECHBIZ FORENSE DIGITAL LTDA', value: 4.1, color: '#A78BFA' },
-            { name: 'COMPANHIA DE PROCESSAMENTO DE DADOS DO ESTADO DE SÃO PAULO - PRODESP', value: 3.5, color: '#3B82F6' },
+            { name: 'COMPANHIA DE PROCESSAMENTO DE DADOS DO ESTADO DE SAO PAULO - PRODESP', value: 3.5, color: '#3B82F6' },
             { name: 'SERVICO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)', value: 2.8, color: '#000000' },
             { name: 'RESOURCE TECNOLOGIA E INFORMATICA LTDA', value: 1.6, color: '#F97316' }
           ];
@@ -106,7 +107,7 @@
 
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                       <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-2xl font-light text-gray-700">504118442.2267</p>
+                        <p className="text-2xl font-light text-gray-700">504.118.442</p>
                       </div>
                       <div className="px-6 py-4">
                         <p className="text-base font-semibold text-gray-800">Itens vendidos</p>
@@ -116,7 +117,7 @@
 
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                       <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-2xl font-light text-gray-700">4925</p>
+                        <p className="text-2xl font-light text-gray-700">4.925</p>
                       </div>
                       <div className="px-6 py-4">
                         <p className="text-base font-semibold text-gray-800">Empresas vencedoras</p>
@@ -132,7 +133,7 @@
                       </div>
                       <div className="px-6 py-4">
                         <p className="text-base font-semibold text-gray-800">Maior valor</p>
-                        <p className="text-sm text-gray-600">Quantidade total única homologada</p>
+                        <p className="text-sm text-gray-600">Quantidade total unica homologada</p>
                       </div>
                     </div>
 
@@ -159,7 +160,7 @@
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-                  <h2 className="text-xl font-normal text-gray-700 mb-6">Evolução temporal</h2>
+                  <h2 className="text-xl font-normal text-gray-700 mb-6">Evolucao temporal</h2>
                   <ResponsiveContainer width="100%" height={400}>
                     <LineChart data={timelineData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -238,14 +239,17 @@
                 </div>
 
                 <div className="mt-8 text-center text-sm text-gray-600 pb-4">
-                  <p>Pesquisa pública. Informações retiradas do Portal Nacional de Contratações Públicas.</p>
+                  <p>Pesquisa publica. Informacoes retiradas do Portal Nacional de Contratacoes Publicas.</p>
                 </div>
               </div>
             </div>
           );
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<MarketResearchDashboard />);
+        window.addEventListener('load', function() {
+          const root = ReactDOM.createRoot(document.getElementById('root'));
+          root.render(<MarketResearchDashboard />);
+        });
     </script>
-
+</body>
+</html>
