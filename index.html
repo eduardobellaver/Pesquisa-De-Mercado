@@ -114,12 +114,70 @@
                     <canvas id="stateChart"></canvas>
                 </div>
             </div>
+            
+            <!-- New Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Top 10 Orgs Chart -->
+                <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
+                    <h2 class="text-lg md:text-xl font-normal text-gray-700 mb-6">Total Homologado (R$) pelos Top 10 Órgãos</h2>
+                    <div class="relative" style="height: 400px;">
+                        <canvas id="topOrgsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top 15 Services Chart -->
+                <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
+                    <h2 class="text-lg md:text-xl font-normal text-gray-700 mb-6">Total Homologado (R$) pelos Top 15 Serviços</h2>
+                    <div class="relative" style="height: 400px;">
+                        <canvas id="topServicesChart"></canvas>
+                    </div>
+                </div>
+            </div>
 
             <!-- Organizations Pie Chart -->
             <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-8">
                 <h2 class="text-lg md:text-xl font-normal text-gray-700 mb-6">% do Total Homologado por Órgãos</h2>
                 <div class="relative" style="height: 500px;">
                     <canvas id="orgsPieChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Data Tables Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Tabela Top 10 Órgãos -->
+                <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
+                    <h2 class="text-lg md:text-xl font-normal text-gray-700 mb-6">Top 10 Órgãos por Valor Homologado (R$)</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200" id="topOrgsTable">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Órgão</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Homologado (R$)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Dados da Tabela serão preenchidos pelo JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tabela Top 15 Serviços -->
+                <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
+                    <h2 class="text-lg md:text-xl font-normal text-gray-700 mb-6">Top 15 Serviços por Valor Homologado (R$)</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200" id="topServicesTable">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serviço</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Homologado (R$)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Dados da Tabela serão preenchidos pelo JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -155,6 +213,19 @@
                 companies: [5000000, 10000000, 50000000, 8000000, 180000000, 80000000, 100000000, 50000000, 20000000, 30000000, 120000000, 15000000, 25000000, 40000000, 18000000, 70000000, 15000000, 120000000, 50000000, 20000000, 12000000, 8000000, 100000000, 220000000, 16000000, 60000000, 18000000],
                 totalPaid: [100000000, 200000000, 500000000, 60000000, 1500000000, 800000000, 1200000000, 400000000, 200000000, 300000000, 1000000000, 160000000, 250000000, 350000000, 180000000, 600000000, 140000000, 13000000000, 4000000000, 200000000, 120000000, 80000000, 1000000000, 25000000000, 160000000, 5000000000, 180000000]
             };
+            
+            const topOrgsData = {
+                labels: ['SECRETARIA...', 'INSTITUTO...', 'TRIBUNAL D...', 'MINISTÉRIO...', 'MINISTÉRIO...', 'COMANDO DA...', 'SECRETARIA...', 'MINISTÉRIO...', 'TRIBUNAL S...', 'TRIBUNAL R...'],
+                fullNames: ['SECRETARIA DE ESTADO DA EDUCAÇÃO', 'INSTITUTO NACIONAL DO SEGURO SOCIAL', 'TRIBUNAL DE CONTAS DO ESTADO DO PARANÁ', 'MINISTÉRIO DO PLANEJAMENTO, DESENVOLVIMENTO E GESTÃO - MPDG', 'MINISTÉRIO DA GESTÃO E DA INOVAÇÃO EM SERVIÇOS PÚBLICOS', 'COMANDO DA AERONÁUTICA', 'SECRETARIA DE ESTADO DA COMUNICAÇÃO', 'MINISTÉRIO DA JUSTIÇA E SEGURANÇA PÚBLICA', 'TRIBUNAL SUPERIOR ELEITORAL', 'TRIBUNAL REGIONAL FEDERAL DA 2 REGIÃO'],
+                values: [12000000000, 2500000000, 2000000000, 700000000, 600000000, 550000000, 450000000, 400000000, 300000000, 250000000],
+                colors: ['#FFC0CB', '#1E40AF', '#22C55E', '#7C9CB5', '#DC2626', '#EAB308', '#A78BFA', '#3B82F6', '#000000', '#F97316']
+            };
+
+            const topServicesData = {
+                labels: ['Serviço de...', 'SUSTENTAÇÃ...', 'Cessão tem...', 'Fornecimen...', 'Software c...', 'Cessão Tem...', 'Implementa...', 'Software c...', 'Tecnologia...', 'Manutenção...', 'Tecnologia...', 'Sustentaçã...', 'Manutenção...', 'Cessão Tem...', 'Sistema (...' ],
+                fullNames: ['Serviço de Desenvolvimento de Sistemas', 'SUSTENTAÇÃO E MANUTENÇÃO DE SISTEMAS', 'Cessão temporária de direito de uso de software', 'Fornecimento de Licenças de Software', 'Software com cessão temporária de direito de uso', 'Cessão Temporária de Uso de Software', 'Implementação de Solução', 'Software com Cessão Temporária', 'Tecnologia da Informação e Comunicação', 'Manutenção de Software', 'Tecnologia da Informação', 'Sustentação de Soluções', 'Manutenção de Licenças de Software', 'Cessão Temporária de Direito de Uso', 'Sistema de Informação'],
+                values: [12500000000, 2200000000, 2000000000, 1800000000, 1000000000, 900000000, 800000000, 700000000, 600000000, 500000000, 400000000, 350000000, 300000000, 250000000, 200000000],
+            };
 
             const orgsData = {
                 labels: [
@@ -169,280 +240,3 @@
                     'TRIBUNAL SUPERIOR ELEITORAL',
                     'TRIBUNAL REGIONAL FEDERAL DA 2 REGIÃO'
                 ],
-                percentages: [55, 15, 8, 5, 4, 3, 2.5, 2, 1.5, 1],
-                colors: ['#FFC0CB', '#1E40AF', '#22C55E', '#A0AEC0', '#DC2626', '#EAB308', '#8B5CF6', '#3B82F6', '#000000', '#F97316']
-            };
-
-            // Helper function
-            function formatCurrency(value) {
-                if (value >= 1000000000) {
-                    return 'R$ ' + (value / 1000000000).toFixed(1) + ' B';
-                }
-                return 'R$ ' + (value / 1000000).toFixed(0) + ' M';
-            }
-
-            // Timeline Chart
-            const timelineCtx = document.getElementById('timelineChart').getContext('2d');
-            new Chart(timelineCtx, {
-                type: 'line',
-                data: {
-                    labels: timelineData.labels,
-                    datasets: [{
-                        label: 'Qtd. de itens vendidos',
-                        data: timelineData.items,
-                        borderColor: '#FFC0CB',
-                        backgroundColor: 'rgba(255, 192, 203, 0.1)',
-                        borderWidth: 2,
-                        yAxisID: 'y1',
-                        tension: 0.3
-                    }, {
-                        label: 'Valor total itens vendidos',
-                        data: timelineData.values,
-                        borderColor: '#1E40AF',
-                        backgroundColor: 'rgba(30, 64, 175, 0.1)',
-                        borderWidth: 2,
-                        yAxisID: 'y',
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    scales: {
-                        y: {
-                            type: 'linear',
-                            position: 'left',
-                            ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
-                                }
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            position: 'right',
-                            grid: {
-                                drawOnChartArea: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.datasetIndex === 1) {
-                                        label += formatCurrency(context.parsed.y);
-                                    } else {
-                                        label += context.parsed.y.toLocaleString('pt-BR');
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Bar Chart
-            const barCtx = document.getElementById('companyBarChart').getContext('2d');
-            new Chart(barCtx, {
-                type: 'bar',
-                data: {
-                    labels: companyData.labels,
-                    datasets: [{
-                        label: 'Valor Total',
-                        data: companyData.values,
-                        backgroundColor: companyData.colors,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function(context) {
-                                    return companyData.fullNames[context[0].dataIndex];
-                                },
-                                label: function(context) {
-                                    return formatCurrency(context.parsed.x);
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Pie Chart
-            const pieCtx = document.getElementById('companyPieChart').getContext('2d');
-            new Chart(pieCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: companyData.fullNames,
-                    datasets: [{
-                        data: companyData.percentages,
-                        backgroundColor: companyData.colors,
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                boxWidth: 12,
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + '%';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // State Chart
-            const stateCtx = document.getElementById('stateChart').getContext('2d');
-            new Chart(stateCtx, {
-                type: 'bar',
-                data: {
-                    labels: stateData.labels,
-                    datasets: [{
-                        label: 'Quantidade de pagamentos',
-                        data: stateData.payments,
-                        backgroundColor: '#FFC0CB',
-                        borderRadius: 4,
-                        order: 2
-                    }, {
-                        label: 'Quantidade de empresas',
-                        data: stateData.companies,
-                        backgroundColor: '#EAB308',
-                        borderRadius: 4,
-                        order: 1
-                    }, {
-                        label: 'Total pago',
-                        data: stateData.totalPaid,
-                        backgroundColor: '#1E40AF',
-                        borderRadius: 4,
-                        order: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                boxWidth: 15,
-                                padding: 15
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.datasetIndex === 1) {
-                                        label += context.parsed.y.toLocaleString('pt-BR');
-                                    } else {
-                                        label += formatCurrency(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
-                                }
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                font: {
-                                    size: 10
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Organizations Pie Chart
-            const orgsPieCtx = document.getElementById('orgsPieChart').getContext('2d');
-            new Chart(orgsPieCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: orgsData.labels,
-                    datasets: [{
-                        data: orgsData.percentages,
-                        backgroundColor: orgsData.colors,
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                boxWidth: 15,
-                                font: {
-                                    size: 11
-                                },
-                                padding: 10
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + '%';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-</body>
-</html>
