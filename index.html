@@ -4,413 +4,485 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesquisa de Mercado - Segmento de Software</title>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.10.3/Recharts.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        @media (min-width: 768px) {
+            h1 { font-size: 2.25rem; }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .stat-value {
+            background-color: #dbeafe;
+            padding: 1rem 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 300;
+            color: #374151;
+        }
+        @media (min-width: 768px) {
+            .stat-value { font-size: 1.5rem; }
+        }
+        .stat-label {
+            padding: 1rem 1.5rem;
+        }
+        .stat-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        .stat-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .chart-title { font-size: 1.25rem; }
+        }
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+        .chart-wrapper-tall {
+            position: relative;
+            height: 500px;
+        }
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 1024px) {
+            .charts-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            padding: 1rem 0 2rem;
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState } = React;
-        const { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
-
-        function MarketResearchDashboard() {
-          const timelineData = [
-            { date: '10/2023', items: 5000000, value: 100000000 },
-            { date: '11/2023', items: 8000000, value: 200000000 },
-            { date: '12/2023', items: 12000000, value: 400000000 },
-            { date: '1/2024', items: 10000000, value: 300000000 },
-            { date: '2/2024', items: 5000000, value: 100000000 },
-            { date: '3/2024', items: 8000000, value: 200000000 },
-            { date: '4/2024', items: 15000000, value: 800000000 },
-            { date: '5/2024', items: 50000000, value: 3000000000 },
-            { date: '6/2024', items: 8000000, value: 200000000 },
-            { date: '7/2024', items: 180000000, value: 6000000000 },
-            { date: '8/2024', items: 280000000, value: 13000000000 },
-            { date: '9/2024', items: 100000000, value: 3500000000 },
-            { date: '10/2024', items: 45000000, value: 2000000000 },
-            { date: '11/2024', items: 35000000, value: 1500000000 },
-            { date: '12/2024', items: 25000000, value: 800000000 },
-            { date: '1/2025', items: 20000000, value: 600000000 },
-            { date: '2/2025', items: 18000000, value: 500000000 },
-            { date: '3/2025', items: 15000000, value: 400000000 },
-            { date: '4/2025', items: 12000000, value: 300000000 },
-            { date: '5/2025', items: 35000000, value: 1200000000 },
-            { date: '6/2025', items: 28000000, value: 900000000 },
-            { date: '7/2025', items: 22000000, value: 700000000 },
-            { date: '8/2025', items: 18000000, value: 500000000 },
-            { date: '9/2025', items: 15000000, value: 400000000 },
-            { date: '10/2025', items: 12000000, value: 300000000 }
-          ];
-
-          const companyData = [
-            { name: 'CENTRO DE...', value: 12831331029.21, fullName: 'CENTRO DE INFORMÁTICA E AUTOMAÇÃO DO ESTADO DE SC S/A' },
-            { name: 'EMPRESA DE...', value: 2700000000, fullName: 'EMPRESA DE TECNOLOGIA E INFORMAÇÕES DA PREVIDÊNCIA' },
-            { name: 'SMART CITI...', value: 2000000000, fullName: 'SMART CITIZEN DESENVOLVIMENTO E LICENCIAMENTO DE SOFTWARE LTDA' },
-            { name: 'BRASOFTWAR...', value: 1700000000, fullName: 'BRASOFTWARE INFORMÁTICA LTDA' },
-            { name: 'ATECH - NE...', value: 500000000, fullName: 'ATECH - NEGÓCIOS EM TECNOLOGIAS S.A.' },
-            { name: 'EXTREME DI...', value: 400000000, fullName: 'EXTREME DIGITAL EXPERIENCE LTDA' },
-            { name: 'TECHBIZ FO...', value: 350000000, fullName: 'TECHBIZ FORENSE DIGITAL LTDA' },
-            { name: 'COMPANHIA...', value: 300000000, fullName: 'COMPANHIA DE PROCESSAMENTO DE DADOS DO ESTADO DE SÃO PAULO - PRODESP' },
-            { name: 'SERVICO FE...', value: 280000000, fullName: 'SERVIÇO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)' },
-            { name: 'RESOURCE T...', value: 250000000, fullName: 'RESOURCE TECNOLOGIA E INFORMÁTICA LTDA' }
-          ];
-
-          const pieData = [
-            { name: 'CENTRO DE INFORMÁTICA E AUTOMAÇÃO DO ESTADO DE SC S/A', value: 43.8, color: '#FFC0CB' },
-            { name: 'EMPRESA DE TECNOLOGIA E INFORMAÇÕES DA PREVIDÊNCIA', value: 13.5, color: '#1E40AF' },
-            { name: 'SMART CITIZEN DESENVOLVIMENTO E LICENCIAMENTO DE SOFTWARE LTDA', value: 10.2, color: '#22C55E' },
-            { name: 'BRASOFTWARE INFORMÁTICA LTDA', value: 8.5, color: '#7C9CB5' },
-            { name: 'ATECH - NEGÓCIOS EM TECNOLOGIAS S.A.', value: 6.8, color: '#DC2626' },
-            { name: 'EXTREME DIGITAL EXPERIENCE LTDA', value: 5.2, color: '#EAB308' },
-            { name: 'TECHBIZ FORENSE DIGITAL LTDA', value: 4.1, color: '#A78BFA' },
-            { name: 'COMPANHIA DE PROCESSAMENTO DE DADOS DO ESTADO DE SÃO PAULO - PRODESP', value: 3.5, color: '#3B82F6' },
-            { name: 'SERVIÇO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)', value: 2.8, color: '#000000' },
-            { name: 'RESOURCE TECNOLOGIA E INFORMÁTICA LTDA', value: 1.6, color: '#F97316' }
-          ];
-
-          const stateData = [
-            { name: 'SC', value: 13177734290.87, color: '#1E40AF' },
-            { name: 'DF', value: 5200000000, color: '#22C55E' },
-            { name: 'SP', value: 3800000000, color: '#DC2626' },
-            { name: 'RJ', value: 2100000000, color: '#EAB308' },
-            { name: 'MG', value: 1500000000, color: '#A78BFA' },
-            { name: 'RS', value: 1200000000, color: '#3B82F6' },
-            { name: 'PR', value: 900000000, color: '#F97316' },
-            { name: 'BA', value: 600000000, color: '#FFC0CB' },
-            { name: 'PE', value: 450000000, color: '#7C9CB5' },
-            { name: 'CE', value: 370000000, color: '#10B981' }
-          ];
-
-          const orgsData = [
-            { name: 'Secretaria...', value: 8500000000, fullName: 'Secretaria de Estado da Fazenda de Santa Catarina' },
-            { name: 'Ministério...', value: 4200000000, fullName: 'Ministério da Economia' },
-            { name: 'Tribunal...', value: 3100000000, fullName: 'Tribunal de Contas da União' },
-            { name: 'Receita...', value: 2800000000, fullName: 'Receita Federal do Brasil' },
-            { name: 'INSS', value: 2400000000, fullName: 'Instituto Nacional do Seguro Social' },
-            { name: 'Polícia...', value: 1900000000, fullName: 'Polícia Federal' },
-            { name: 'Ministério...', value: 1600000000, fullName: 'Ministério da Justiça' },
-            { name: 'Dataprev', value: 1300000000, fullName: 'Empresa de Tecnologia e Informações da Previdência' },
-            { name: 'Caixa...', value: 1100000000, fullName: 'Caixa Econômica Federal' },
-            { name: 'Banco...', value: 950000000, fullName: 'Banco do Brasil' }
-          ];
-
-          const orgsPieData = [
-            { name: 'Secretaria de Estado da Fazenda de Santa Catarina', value: 29.0, color: '#1E40AF' },
-            { name: 'Ministério da Economia', value: 14.3, color: '#22C55E' },
-            { name: 'Tribunal de Contas da União', value: 10.6, color: '#DC2626' },
-            { name: 'Receita Federal do Brasil', value: 9.5, color: '#EAB308' },
-            { name: 'Instituto Nacional do Seguro Social', value: 8.2, color: '#A78BFA' },
-            { name: 'Polícia Federal', value: 6.5, color: '#3B82F6' },
-            { name: 'Ministério da Justiça', value: 5.5, color: '#F97316' },
-            { name: 'Empresa de Tecnologia e Informações da Previdência', value: 4.4, color: '#FFC0CB' },
-            { name: 'Caixa Econômica Federal', value: 3.8, color: '#7C9CB5' },
-            { name: 'Banco do Brasil', value: 3.2, color: '#10B981' },
-            { name: 'Outros', value: 5.0, color: '#94A3B8' }
-          ];
-
-          const servicesData = [
-            { name: 'Licença...', value: 6500000000, fullName: 'Licença de uso de software de gestão empresarial' },
-            { name: 'Serviço...', value: 4800000000, fullName: 'Serviço de desenvolvimento de sistemas' },
-            { name: 'Manutenção...', value: 3200000000, fullName: 'Manutenção de software' },
-            { name: 'Consultoria...', value: 2900000000, fullName: 'Consultoria em tecnologia da informação' },
-            { name: 'Hospedagem...', value: 2100000000, fullName: 'Hospedagem de aplicações em nuvem' },
-            { name: 'Suporte...', value: 1800000000, fullName: 'Suporte técnico especializado' },
-            { name: 'Integração...', value: 1500000000, fullName: 'Integração de sistemas' },
-            { name: 'Segurança...', value: 1300000000, fullName: 'Segurança da informação' },
-            { name: 'Backup...', value: 1100000000, fullName: 'Backup e recuperação de dados' },
-            { name: 'Treinamento...', value: 950000000, fullName: 'Treinamento de usuários' },
-            { name: 'Analytics...', value: 800000000, fullName: 'Análise de dados e BI' },
-            { name: 'Mobile...', value: 650000000, fullName: 'Desenvolvimento de aplicativos móveis' },
-            { name: 'IoT...', value: 500000000, fullName: 'Soluções de Internet das Coisas' },
-            { name: 'AI/ML...', value: 400000000, fullName: 'Inteligência Artificial e Machine Learning' },
-            { name: 'Blockchain...', value: 300000000, fullName: 'Soluções em Blockchain' }
-          ];
-
-          const chartColors = ['#1E40AF', '#22C55E', '#DC2626', '#EAB308', '#A78BFA', '#3B82F6', '#F97316', '#FFC0CB', '#7C9CB5', '#10B981', '#EC4899', '#8B5CF6', '#14B8A6', '#F59E0B', '#6366F1'];
-
-          const formatCurrency = (value) => {
-            if (value >= 1000000000) {
-              return `R$ ${(value / 1000000000).toFixed(1)} B`;
-            }
-            return `R$ ${(value / 1000000).toFixed(0)} M`;
-          };
-
-          const formatNumber = (num) => {
-            return new Intl.NumberFormat('pt-BR').format(num);
-          };
-
-          return (
-            <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-              <div className="max-w-7xl mx-auto">
-                <div className="mb-8">
-                  <h1 className="text-2xl md:text-3xl font-normal text-gray-800 text-center mb-8 relative">
-                    <span className="inline-block relative">
-                      <span className="hidden md:block absolute left-0 right-0 top-1/2 h-0.5 bg-blue-400 -translate-y-1/2 -mx-64"></span>
-                      <span className="relative bg-gray-50 px-6">Pesquisa de Mercado - Segmento de Software</span>
-                    </span>
-                  </h1>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-xl md:text-2xl font-light text-gray-700">R$ 29.297.681.130,26</p>
-                      </div>
-                      <div className="px-6 py-4">
-                        <p className="text-base font-semibold text-gray-800">Valor total</p>
-                        <p className="text-sm text-gray-600">Quantidade total homologada</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-xl md:text-2xl font-light text-gray-700">504.118.442</p>
-                      </div>
-                      <div className="px-6 py-4">
-                        <p className="text-base font-semibold text-gray-800">Itens vendidos</p>
-                        <p className="text-sm text-gray-600">Quantidade total</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-xl md:text-2xl font-light text-gray-700">4.925</p>
-                      </div>
-                      <div className="px-6 py-4">
-                        <p className="text-base font-semibold text-gray-800">Empresas vencedoras</p>
-                        <p className="text-sm text-gray-600">Quantidade total</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-xl md:text-2xl font-light text-gray-700">R$ 12.178.661.520,00</p>
-                      </div>
-                      <div className="px-6 py-4">
-                        <p className="text-base font-semibold text-gray-800">Maior valor</p>
-                        <p className="text-sm text-gray-600">Quantidade total única homologada</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-xl md:text-2xl font-light text-gray-700">R$ 13.177.734.290,87</p>
-                      </div>
-                      <div className="px-6 py-4">
-                        <p className="text-base font-semibold text-gray-800">SC</p>
-                        <p className="text-sm text-gray-600">Principal estado</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="bg-blue-100 px-6 py-4">
-                        <p className="text-xl md:text-2xl font-light text-gray-700">R$ 12.831.331.029,21</p>
-                      </div>
-                      <div className="px-6 py-4">
-                        <p className="text-base font-semibold text-gray-800">CENTRO DE INFORMÁTICA E AUTOMAÇÃO DO ESTADO DE SC S/A</p>
-                        <p className="text-sm text-gray-600">Principal empresa vencedora</p>
-                      </div>
-                    </div>
-                  </div>
+    <div class="container">
+        <h1>Pesquisa de Mercado - Segmento de Software</h1>
+        
+        <!-- Top Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">R$ 29.297.681.130,26</div>
+                <div class="stat-label">
+                    <div class="stat-title">Valor total</div>
+                    <div class="stat-subtitle">Quantidade total homologada</div>
                 </div>
-
-                {/* Evolução Temporal */}
-                <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-8">
-                  <h2 className="text-lg md:text-xl font-normal text-gray-700 mb-6">Evolução temporal</h2>
-                  <ResponsiveContainer width="100%" height={400}>
-                    <LineChart data={timelineData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis dataKey="date" tick={{ fontSize: 11 }} angle={-45} textAnchor="end" height={80} />
-                      <YAxis yAxisId="left" tick={{ fontSize: 12 }} tickFormatter={formatCurrency} />
-                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
-                      <Tooltip formatter={(value, name) => {
-                        if (name === 'value') return [formatCurrency(value), 'Valor total itens vendidos'];
-                        return [formatNumber(value), 'Qtd. de itens vendidos'];
-                      }} />
-                      <Legend 
-                        wrapperStyle={{ fontSize: '13px' }}
-                        formatter={(value) => value === 'items' ? 'Qtd. de itens vendidos' : 'Valor total itens vendidos'}
-                      />
-                      <Line yAxisId="right" type="monotone" dataKey="items" stroke="#FFC0CB" strokeWidth={2} name="items" dot={false} />
-                      <Line yAxisId="left" type="monotone" dataKey="value" stroke="#1E40AF" strokeWidth={2} name="value" dot={false} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Total por Estado */}
-                <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-8">
-                  <h2 className="text-lg md:text-xl font-normal text-gray-700 mb-6">Total Homologado (R$) por Estado</h2>
-                  <ResponsiveContainer width="100%" height={500}>
-                    <BarChart data={stateData} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={formatCurrency} />
-                      <YAxis dataKey="name" type="category" width={50} tick={{ fontSize: 12 }} />
-                      <Tooltip formatter={(value) => formatCurrency(value)} />
-                      <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                        {stateData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Top 10 Órgãos */}
-                <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-8">
-                  <h2 className="text-lg md:text-xl font-normal text-gray-700 mb-6">Total Homologado (R$) pelos Top 10 Órgãos</h2>
-                  <ResponsiveContainer width="100%" height={500}>
-                    <BarChart data={orgsData} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={formatCurrency} />
-                      <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 10 }} />
-                      <Tooltip 
-                        formatter={(value) => formatCurrency(value)}
-                        labelFormatter={(label, payload) => {
-                          if (payload && payload[0]) {
-                            return payload[0].payload.fullName;
-                          }
-                          return label;
-                        }}
-                      />
-                      <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                        {orgsData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={chartColors[index]} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Top 15 Itens */}
-                <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-8">
-                  <h2 className="text-lg md:text-xl font-normal text-gray-700 mb-6">Total Homologado (R$) pelos Top 15 Itens</h2>
-                  <ResponsiveContainer width="100%" height={500}>
-                    <BarChart data={servicesData} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={formatCurrency} />
-                      <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 10 }} />
-                      <Tooltip 
-                        formatter={(value) => formatCurrency(value)}
-                        labelFormatter={(label, payload) => {
-                          if (payload && payload[0]) {
-                            return payload[0].payload.fullName;
-                          }
-                          return label;
-                        }}
-                      />
-                      <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                        {servicesData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={chartColors[index]} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Empresa e Órgãos lado a lado */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                  <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-                    <h2 className="text-lg md:text-xl font-normal text-gray-700 mb-6">Total Homologado (R$) por Empresa</h2>
-                    <ResponsiveContainer width="100%" height={400}>
-                      <BarChart data={companyData} layout="vertical">
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={formatCurrency} />
-                        <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 10 }} />
-                        <Tooltip 
-                          formatter={(value) => formatCurrency(value)}
-                          labelFormatter={(label, payload) => {
-                            if (payload && payload[0]) {
-                              return payload[0].payload.fullName;
-                            }
-                            return label;
-                          }}
-                        />
-                        <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                          {companyData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={pieData[index]?.color || '#94a3b8'} />
-                          ))}
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-                    <h2 className="text-lg md:text-xl font-normal text-gray-700 mb-6">% do Total Homologado por Empresa</h2>
-                    <ResponsiveContainer width="100%" height={400}>
-                      <PieChart>
-                        <Pie
-                          data={pieData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={80}
-                          outerRadius={140}
-                          paddingAngle={1}
-                          dataKey="value"
-                        >
-                          {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip formatter={(value) => `${value}%`} />
-                        <Legend 
-                          layout="vertical" 
-                          align="right" 
-                          verticalAlign="middle"
-                          wrapperStyle={{ fontSize: '11px', paddingLeft: '20px' }}
-                          iconType="square"
-                          iconSize={12}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Gráfico de Pizza - Órgãos */}
-                <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-8">
-                  <h2 className="text-lg md:text-xl font-normal text-gray-700 mb-6">% do Total Homologado por Órgãos</h2>
-                  <ResponsiveContainer width="100%" height={500}>
-                    <PieChart>
-                      <Pie
-                        data={orgsPieData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={100}
-                        outerRadius={180}
-                        paddingAngle={1}
-                        dataKey="value"
-                      >
-                        {orgsPieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip formatter={(value) => `${value}%`} />
-                      <Legend 
-                        layout="vertical" 
-                        align="right" 
-                        verticalAlign="middle"
-                        wrapperStyle={{ fontSize: '11px', paddingLeft: '20px' }}
-                        iconType="square"
-                        iconSize={12}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-
-                <div className="mt-8 text-center text-sm text-gray-600 pb-4">
-                  <p>Pesquisa pública. Informações retiradas do Portal Nacional de Contratações Públicas.</p>
-                </div>
-              </div>
             </div>
-          );
-        }
+            <div class="stat-card">
+                <div class="stat-value">504.118.442</div>
+                <div class="stat-label">
+                    <div class="stat-title">Itens vendidos</div>
+                    <div class="stat-subtitle">Quantidade total</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">4.925</div>
+                <div class="stat-label">
+                    <div class="stat-title">Empresas vencedoras</div>
+                    <div class="stat-subtitle">Quantidade total</div>
+                </div>
+            </div>
+        </div>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<MarketResearchDashboard />);
+        <!-- Bottom Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">R$ 12.178.661.520,00</div>
+                <div class="stat-label">
+                    <div class="stat-title">Maior valor</div>
+                    <div class="stat-subtitle">Quantidade total única homologada</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">R$ 13.177.734.290,87</div>
+                <div class="stat-label">
+                    <div class="stat-title">SC</div>
+                    <div class="stat-subtitle">Principal estado</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">R$ 12.831.331.029,21</div>
+                <div class="stat-label">
+                    <div class="stat-title">CENTRO DE INFORMÁTICA E AUTOMAÇÃO DO ESTADO DE SC S/A</div>
+                    <div class="stat-subtitle">Principal empresa vencedora</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Chart -->
+        <div class="chart-container">
+            <h2 class="chart-title">Evolução temporal</h2>
+            <div class="chart-wrapper">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- State Chart -->
+        <div class="chart-container">
+            <h2 class="chart-title">Total Homologado (R$) por Estado</h2>
+            <div class="chart-wrapper-tall">
+                <canvas id="stateChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top 10 Organizations -->
+        <div class="chart-container">
+            <h2 class="chart-title">Total Homologado (R$) pelos Top 10 Órgãos</h2>
+            <div class="chart-wrapper-tall">
+                <canvas id="orgsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top 15 Services -->
+        <div class="chart-container">
+            <h2 class="chart-title">Total Homologado (R$) pelos Top 15 Itens</h2>
+            <div class="chart-wrapper-tall">
+                <canvas id="servicesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Company Charts Row -->
+        <div class="charts-row">
+            <div class="chart-container">
+                <h2 class="chart-title">Total Homologado (R$) por Empresa</h2>
+                <div class="chart-wrapper">
+                    <canvas id="companyBarChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h2 class="chart-title">% do Total Homologado por Empresa</h2>
+                <div class="chart-wrapper">
+                    <canvas id="companyPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Organizations Pie Chart -->
+        <div class="chart-container">
+            <h2 class="chart-title">% do Total Homologado por Órgãos</h2>
+            <div class="chart-wrapper-tall">
+                <canvas id="orgsPieChart"></canvas>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Pesquisa pública. Informações retiradas do Portal Nacional de Contratações Públicas.</p>
+        </div>
+    </div>
+
+    <script>
+        const formatCurrency = (value) => {
+            if (value >= 1000000000) return 'R$ ' + (value / 1000000000).toFixed(1) + ' B';
+            return 'R$ ' + (value / 1000000).toFixed(0) + ' M';
+        };
+
+        // Data
+        const timelineLabels = ['10/23', '11/23', '12/23', '1/24', '2/24', '3/24', '4/24', '5/24', '6/24', '7/24', '8/24', '9/24', '10/24', '11/24', '12/24', '1/25', '2/25', '3/25', '4/25', '5/25', '6/25', '7/25', '8/25', '9/25', '10/25'];
+        const itemsData = [5000000, 8000000, 12000000, 10000000, 5000000, 8000000, 15000000, 50000000, 8000000, 180000000, 280000000, 100000000, 45000000, 35000000, 25000000, 20000000, 18000000, 15000000, 12000000, 35000000, 28000000, 22000000, 18000000, 15000000, 12000000];
+        const valuesData = [100000000, 200000000, 400000000, 300000000, 100000000, 200000000, 800000000, 3000000000, 200000000, 6000000000, 13000000000, 3500000000, 2000000000, 1500000000, 800000000, 600000000, 500000000, 400000000, 300000000, 1200000000, 900000000, 700000000, 500000000, 400000000, 300000000];
+
+        const stateLabels = ['SC', 'DF', 'SP', 'RJ', 'MG', 'RS', 'PR', 'BA', 'PE', 'CE'];
+        const stateValues = [13177734290.87, 5200000000, 3800000000, 2100000000, 1500000000, 1200000000, 900000000, 600000000, 450000000, 370000000];
+        const stateColors = ['#1E40AF', '#22C55E', '#DC2626', '#EAB308', '#A78BFA', '#3B82F6', '#F97316', '#FFC0CB', '#7C9CB5', '#10B981'];
+
+        const companyLabels = ['CENTRO DE...', 'EMPRESA DE...', 'SMART CITI...', 'BRASOFTWAR...', 'ATECH - NE...', 'EXTREME DI...', 'TECHBIZ FO...', 'COMPANHIA...', 'SERVICO FE...', 'RESOURCE T...'];
+        const companyFullNames = ['CENTRO DE INFORMÁTICA E AUTOMAÇÃO DO ESTADO DE SC S/A', 'EMPRESA DE TECNOLOGIA E INFORMAÇÕES DA PREVIDÊNCIA', 'SMART CITIZEN DESENVOLVIMENTO E LICENCIAMENTO DE SOFTWARE LTDA', 'BRASOFTWARE INFORMÁTICA LTDA', 'ATECH - NEGÓCIOS EM TECNOLOGIAS S.A.', 'EXTREME DIGITAL EXPERIENCE LTDA', 'TECHBIZ FORENSE DIGITAL LTDA', 'COMPANHIA DE PROCESSAMENTO DE DADOS DO ESTADO DE SÃO PAULO - PRODESP', 'SERVIÇO FEDERAL DE PROCESSAMENTO DE DADOS (SERPRO)', 'RESOURCE TECNOLOGIA E INFORMÁTICA LTDA'];
+        const companyValues = [12831331029.21, 2700000000, 2000000000, 1700000000, 500000000, 400000000, 350000000, 300000000, 280000000, 250000000];
+        const companyColors = ['#FFC0CB', '#1E40AF', '#22C55E', '#7C9CB5', '#DC2626', '#EAB308', '#A78BFA', '#3B82F6', '#000000', '#F97316'];
+        const companyPercentages = [43.8, 13.5, 10.2, 8.5, 6.8, 5.2, 4.1, 3.5, 2.8, 1.6];
+
+        const orgsLabels = ['Secretaria...', 'Ministério...', 'Tribunal...', 'Receita...', 'INSS', 'Polícia...', 'Ministério...', 'Dataprev', 'Caixa...', 'Banco...'];
+        const orgsFullNames = ['Secretaria de Estado da Fazenda de Santa Catarina', 'Ministério da Economia', 'Tribunal de Contas da União', 'Receita Federal do Brasil', 'Instituto Nacional do Seguro Social', 'Polícia Federal', 'Ministério da Justiça', 'Empresa de Tecnologia e Informações da Previdência', 'Caixa Econômica Federal', 'Banco do Brasil'];
+        const orgsValues = [8500000000, 4200000000, 3100000000, 2800000000, 2400000000, 1900000000, 1600000000, 1300000000, 1100000000, 950000000];
+        const orgsColors = ['#1E40AF', '#22C55E', '#DC2626', '#EAB308', '#A78BFA', '#3B82F6', '#F97316', '#FFC0CB', '#7C9CB5', '#10B981'];
+        const orgsPercentages = [29.0, 14.3, 10.6, 9.5, 8.2, 6.5, 5.5, 4.4, 3.8, 3.2, 5.0];
+        const orgsPieLabels = [...orgsFullNames, 'Outros'];
+        const orgsPieColors = [...orgsColors, '#94A3B8'];
+
+        const servicesLabels = ['Licença...', 'Serviço...', 'Manutenção...', 'Consultoria...', 'Hospedagem...', 'Suporte...', 'Integração...', 'Segurança...', 'Backup...', 'Treinamento...', 'Analytics...', 'Mobile...', 'IoT...', 'AI/ML...', 'Blockchain...'];
+        const servicesFullNames = ['Licença de uso de software de gestão empresarial', 'Serviço de desenvolvimento de sistemas', 'Manutenção de software', 'Consultoria em tecnologia da informação', 'Hospedagem de aplicações em nuvem', 'Suporte técnico especializado', 'Integração de sistemas', 'Segurança da informação', 'Backup e recuperação de dados', 'Treinamento de usuários', 'Análise de dados e BI', 'Desenvolvimento de aplicativos móveis', 'Soluções de Internet das Coisas', 'Inteligência Artificial e Machine Learning', 'Soluções em Blockchain'];
+        const servicesValues = [6500000000, 4800000000, 3200000000, 2900000000, 2100000000, 1800000000, 1500000000, 1300000000, 1100000000, 950000000, 800000000, 650000000, 500000000, 400000000, 300000000];
+        const servicesColors = ['#1E40AF', '#22C55E', '#DC2626', '#EAB308', '#A78BFA', '#3B82F6', '#F97316', '#FFC0CB', '#7C9CB5', '#10B981', '#EC4899', '#8B5CF6', '#14B8A6', '#F59E0B', '#6366F1'];
+
+        // Timeline Chart
+        new Chart(document.getElementById('timelineChart'), {
+            type: 'line',
+            data: {
+                labels: timelineLabels,
+                datasets: [{
+                    label: 'Qtd. de itens vendidos',
+                    data: itemsData,
+                    borderColor: '#FFC0CB',
+                    backgroundColor: 'rgba(255, 192, 203, 0.1)',
+                    borderWidth: 2,
+                    yAxisID: 'y1',
+                    tension: 0.3
+                }, {
+                    label: 'Valor total itens vendidos',
+                    data: valuesData,
+                    borderColor: '#1E40AF',
+                    backgroundColor: 'rgba(30, 64, 175, 0.1)',
+                    borderWidth: 2,
+                    yAxisID: 'y',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        ticks: { callback: value => formatCurrency(value) }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        grid: { drawOnChartArea: false }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => {
+                                let label = ctx.dataset.label || '';
+                                if (label) label += ': ';
+                                label += ctx.datasetIndex === 1 ? formatCurrency(ctx.parsed.y) : ctx.parsed.y.toLocaleString('pt-BR');
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // State Chart
+        new Chart(document.getElementById('stateChart'), {
+            type: 'bar',
+            data: {
+                labels: stateLabels,
+                datasets: [{
+                    label: 'Valor Total',
+                    data: stateValues,
+                    backgroundColor: stateColors
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: { label: ctx => formatCurrency(ctx.parsed.x) }
+                    }
+                },
+                scales: {
+                    x: { ticks: { callback: value => formatCurrency(value) } }
+                }
+            }
+        });
+
+        // Organizations Chart
+        new Chart(document.getElementById('orgsChart'), {
+            type: 'bar',
+            data: {
+                labels: orgsLabels,
+                datasets: [{
+                    label: 'Valor Total',
+                    data: orgsValues,
+                    backgroundColor: orgsColors
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: ctx => orgsFullNames[ctx[0].dataIndex],
+                            label: ctx => formatCurrency(ctx.parsed.x)
+                        }
+                    }
+                },
+                scales: {
+                    x: { ticks: { callback: value => formatCurrency(value) } }
+                }
+            }
+        });
+
+        // Services Chart
+        new Chart(document.getElementById('servicesChart'), {
+            type: 'bar',
+            data: {
+                labels: servicesLabels,
+                datasets: [{
+                    label: 'Valor Total',
+                    data: servicesValues,
+                    backgroundColor: servicesColors
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: ctx => servicesFullNames[ctx[0].dataIndex],
+                            label: ctx => formatCurrency(ctx.parsed.x)
+                        }
+                    }
+                },
+                scales: {
+                    x: { ticks: { callback: value => formatCurrency(value) } }
+                }
+            }
+        });
+
+        // Company Bar Chart
+        new Chart(document.getElementById('companyBarChart'), {
+            type: 'bar',
+            data: {
+                labels: companyLabels,
+                datasets: [{
+                    label: 'Valor Total',
+                    data: companyValues,
+                    backgroundColor: companyColors
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: ctx => companyFullNames[ctx[0].dataIndex],
+                            label: ctx => formatCurrency(ctx.parsed.x)
+                        }
+                    }
+                },
+                scales: {
+                    x: { ticks: { callback: value => formatCurrency(value) } }
+                }
+            }
+        });
+
+        // Company Pie Chart
+        new Chart(document.getElementById('companyPieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: companyFullNames,
+                datasets: [{
+                    data: companyPercentages,
+                    backgroundColor: companyColors,
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { boxWidth: 12, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + '%' }
+                    }
+                }
+            }
+        });
+
+        // Organizations Pie Chart
+        new Chart(document.getElementById('orgsPieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: orgsPieLabels,
+                datasets: [{
+                    data: orgsPercentages,
+                    backgroundColor: orgsPieColors,
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { boxWidth: 12, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + '%' }
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
